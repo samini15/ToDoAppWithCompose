@@ -6,9 +6,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import com.example.todoappwithcompose.ui.screens.ListScreen
 import com.example.todoappwithcompose.utils.Constants
+import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
 fun NavGraphBuilder.listComposable(
-    navigateToTaskScreen : (Int) -> Unit
+    navigateToTaskScreen : (taskId: Int) -> Unit,
+    sharedViewModel: ToDoSharedViewModel
 ) {
     composable(
         route = Constants.LIST_SCREEN,
