@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">ToDoAppWithCompose</string>
 
+    <string name="list_screen_title">Tasks</string>
+    <string name="top_app_bar_search_placeholder">Search</string>
+    <string name="search_icon_content_description">Search Icon</string>
     <string name="add_button">Add button</string>
     <string name="search_task_action">Search Tasks</string>
     <string name="sort_task_action">Sort Tasks</string>
     <string name="delete_all_actions">Delete All</string>
+    <string name="close_icon_content_description">Close Icon</string>
 </resources>

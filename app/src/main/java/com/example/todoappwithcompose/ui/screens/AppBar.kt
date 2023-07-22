@@ -120,7 +120,7 @@ fun SearchAppBar(
             onValueChange = {onTextChanged(it)},
             placeholder = {
                 Text(
-                    text = "Search",
+                    text = stringResource(id = R.string.top_app_bar_search_placeholder),
                     modifier = Modifier.alpha(0.4F),
                     color = Color.White
                 )
@@ -137,7 +137,7 @@ fun SearchAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Icon",
+                        contentDescription = stringResource(id = R.string.search_icon_content_description),
                         tint = Color.White // TODO replace by a custom color
                     )
                 }
@@ -163,7 +163,7 @@ fun SearchAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(id = R.string.close_icon_content_description),
                         tint = Color.White // TODO replace by a custom color
                     )
                 }
