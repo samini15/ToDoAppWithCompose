@@ -36,7 +36,7 @@ val ColorScheme.screenBackgroundColor: Color
     get() = if (isSystemInDarkTheme()) DarkGray else PurpleGrey80
 val ColorScheme.cardBackgroundColor: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) MediumGray else Color.White
+    get() = if (isSystemInDarkTheme()) MediumGray else Color.LightGray
 
 val ColorScheme.textColorPrimary: Color
     @Composable
