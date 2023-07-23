@@ -20,7 +20,8 @@ class ToDoSharedViewModel @Inject constructor(
     private val _currentTasks = MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Inactive)
     val currentTasks: StateFlow<RequestState<List<ToDoTask>>> = _currentTasks
 
-
+    private val _selectedTask = MutableStateFlow<ToDoTask?>(null)
+    val selectedTask: StateFlow<ToDoTask?> = _selectedTask
     fun fetchAllTasks() = viewModelScope.launch {
         _currentTasks.value = RequestState.Loading
         try {
@@ -29,6 +30,12 @@ class ToDoSharedViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             _currentTasks.value = RequestState.Error(e)
+        }
+    }
+
+    fun findSelectedTask(taskId: Int) = viewModelScope.launch {
+        toDoRepository.findSelectedTask(taskId = taskId).collect { task ->
+            _selectedTask.value = task
         }
     }
 }
