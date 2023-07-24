@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todoappwithcompose.R
+import com.example.todoappwithcompose.data.model.Priority
 import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
 import com.example.todoappwithcompose.utils.SearchAppBarState
 import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
@@ -27,12 +28,16 @@ fun ListScreen(
 ) {
     LaunchedEffect(key1 = true) {
         sharedViewModel.fetchAllTasks()
+        sharedViewModel.readSortState()
     }
 
     // Observing from viewModel
     val action by sharedViewModel.action
     val allTasks by sharedViewModel.currentTasks.collectAsState()
     val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
+    val sortState by sharedViewModel.sortState.collectAsState()
+    val lowPriorityTasks by sharedViewModel.lowPriorityTasks.collectAsState()
+    val highPriorityTasks by sharedViewModel.highPriorityTasks.collectAsState()
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
 
@@ -47,7 +52,15 @@ fun ListScreen(
         },
         containerColor = MaterialTheme.colorScheme.screenBackgroundColor
     ) { padding ->
-        ListContent(tasks = allTasks, searchedTasks = searchedTasks, navigateToTaskScreen = navigateToTaskScreen, searchAppBarState = searchAppBarState, topPadding = padding.calculateTopPadding())
+        ListContent(
+            tasks = allTasks,
+            searchedTasks = searchedTasks,
+            highPriorityTasks = highPriorityTasks,
+            lowPriorityTasks = lowPriorityTasks,
+            sortState = sortState,
+            navigateToTaskScreen = navigateToTaskScreen,
+            searchAppBarState = searchAppBarState,
+            topPadding = padding.calculateTopPadding())
     }
 
 

@@ -39,17 +39,31 @@ import com.example.todoappwithcompose.utils.SearchAppBarState
 fun ListContent(
     tasks: RequestState<List<ToDoTask>>,
     searchedTasks: RequestState<List<ToDoTask>>,
+    highPriorityTasks: List<ToDoTask>,
+    lowPriorityTasks: List<ToDoTask>,
+    sortState: RequestState<Priority>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     searchAppBarState: SearchAppBarState,
     topPadding: Dp
 ) {
-    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
-        if (searchedTasks is RequestState.Success) {
-            HandleListContent(tasks = searchedTasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
-        }
-    } else {
-        if (tasks is RequestState.Success) {
-            HandleListContent(tasks = tasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+    if (sortState is RequestState.Success) {
+        when {
+            searchAppBarState == SearchAppBarState.TRIGGERED -> {
+                if (searchedTasks is RequestState.Success) {
+                    HandleListContent(tasks = searchedTasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                }
+            }
+            sortState.data == Priority.NONE -> {
+                if (tasks is RequestState.Success) {
+                    HandleListContent(tasks = tasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                }
+            }
+            sortState.data == Priority.LOW -> {
+                HandleListContent(tasks = lowPriorityTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+            }
+            sortState.data == Priority.HIGH -> {
+                HandleListContent(tasks = highPriorityTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+            }
         }
     }
 }
