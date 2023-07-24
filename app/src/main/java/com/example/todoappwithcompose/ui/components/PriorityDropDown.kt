@@ -2,6 +2,7 @@ package com.example.todoappwithcompose.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -48,9 +49,14 @@ fun PriorityDropDown(
 
     Row(modifier = Modifier
         .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.background)
         .height(PRIORITY_DROP_DOWN_HEIGHT)
         .clickable { expanded = true }
-        .border(width = 1.dp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F)),
+        .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F),
+            shape = MaterialTheme.shapes.extraSmall
+        ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Canvas(modifier = Modifier
@@ -61,7 +67,7 @@ fun PriorityDropDown(
         Text(
             text = priority.name,
             modifier = Modifier.weight(8F),
-            style = MaterialTheme.typography.displaySmall
+            style = MaterialTheme.typography.bodyMedium
         )
         IconButton(
             modifier = Modifier
@@ -75,7 +81,7 @@ fun PriorityDropDown(
                 contentDescription = stringResource(id = R.string.drop_down_arrow_icon_content_description))
         }
         DropdownMenu(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(fraction = 0.94F),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {

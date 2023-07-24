@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todoappwithcompose.R
+import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
 import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -34,7 +35,7 @@ fun ListScreen(
         floatingActionButton = {
             ListFab(navigateToTaskScreen = navigateToTaskScreen)
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.screenBackgroundColor
     ) { padding ->
         ListContent(tasks = allTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = padding.calculateTopPadding())
     }

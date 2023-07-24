@@ -16,4 +16,8 @@
     <string name="delete_icon_content_description">Delete Icon</string>
     <string name="update_icon_content_description">Update Icon</string>
     <string name="drop_down_arrow_icon_content_description">Drop-Down Arrow Icon</string>
+    
+    <!-- TextFields labels -->
+    <string name="text_field_label_title">Title</string>
+    <string name="text_field_label_description">Description</string>
 </resources>

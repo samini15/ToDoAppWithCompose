@@ -1,5 +1,6 @@
 package com.example.todoappwithcompose.navigation.destinations
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
@@ -27,6 +28,12 @@ fun NavGraphBuilder.taskComposable(
             sharedViewModel.findSelectedTask(taskId = it)
         }
         val selectedTask by sharedViewModel.selectedTask.collectAsState()
-        TaskScreen(selectedTask = selectedTask, navigateToListScreen = navigateToListScreen)
+
+        // Launch this block every time the taskId changes
+        LaunchedEffect(key1 = taskId) {
+            sharedViewModel.updateTaskFields(selectedTask = selectedTask)
+        }
+
+        TaskScreen(sharedViewModel = sharedViewModel, selectedTask = selectedTask, navigateToListScreen = navigateToListScreen)
     }
 }
