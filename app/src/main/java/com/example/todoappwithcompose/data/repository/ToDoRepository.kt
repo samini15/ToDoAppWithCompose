@@ -1,5 +1,6 @@
-package com.example.todoappwithcompose.data
+package com.example.todoappwithcompose.data.repository
 
+import com.example.todoappwithcompose.data.ToDoDao
 import com.example.todoappwithcompose.data.model.ToDoTask
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow

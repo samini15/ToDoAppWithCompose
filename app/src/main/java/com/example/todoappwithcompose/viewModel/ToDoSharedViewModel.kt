@@ -4,9 +4,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoappwithcompose.data.ToDoRepository
+import com.example.todoappwithcompose.data.repository.ToDoRepository
 import com.example.todoappwithcompose.data.model.Priority
 import com.example.todoappwithcompose.data.model.ToDoTask
+import com.example.todoappwithcompose.data.repository.DataStoreRepository
 import com.example.todoappwithcompose.utils.Action
 import com.example.todoappwithcompose.utils.Constants
 import com.example.todoappwithcompose.utils.RequestState
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ToDoSharedViewModel @Inject constructor(
-    private val toDoRepository: ToDoRepository
+    private val toDoRepository: ToDoRepository,
+    private val dataStoreRepository: DataStoreRepository
 ): ViewModel() {
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)

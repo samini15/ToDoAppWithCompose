@@ -14,4 +14,8 @@ object Constants {
     const val TASK_ARGUMENT_KEY = "taskId"
 
     const val MAX_TITLE_FIELD_LENGTH = 20
+
+    // Data store
+    const val PREFERENCE_NAME = "todo_preferences"
+    const val PREFERENCE_KEY = "sort_state"
 }
