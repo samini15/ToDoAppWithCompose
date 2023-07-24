@@ -20,4 +20,12 @@
     <!-- TextFields labels -->
     <string name="text_field_label_title">Title</string>
     <string name="text_field_label_description">Description</string>
+
+    <!-- Alert Dialog -->
+    <string name="delete_task">Delete \'%1$s\'?</string>
+    <string name="delete_task_confirmation">Are you sure you want to delete \'%1$s\'</string>
+    <string name="delete_all_tasks">Delete all tasks ?</string>
+    <string name="delete_all_tasks_confirmation">Are you sure you want to delete all tasks ? you will not be able to undo this action.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
