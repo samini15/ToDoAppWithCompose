@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,13 +21,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.todoappwithcompose.R
 import com.example.todoappwithcompose.ui.theme.MediumGray
+import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
 
 @Composable
 fun EmptyContent(topPadding: Dp) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background).padding(top = topPadding),
+            .background(MaterialTheme.colorScheme.screenBackgroundColor).padding(top = topPadding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

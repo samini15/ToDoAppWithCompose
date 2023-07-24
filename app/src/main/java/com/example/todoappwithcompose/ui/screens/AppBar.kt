@@ -39,38 +39,42 @@ import com.example.todoappwithcompose.ui.components.PriorityItm
 import com.example.todoappwithcompose.ui.theme.LARGE_PADDING
 import com.example.todoappwithcompose.ui.theme.TOP_APP_BAR_ELEVATION
 import com.example.todoappwithcompose.ui.theme.TOP_APP_BAR_HEIGHT
+import com.example.todoappwithcompose.utils.Action
 import com.example.todoappwithcompose.utils.SearchAppBarState
 import com.example.todoappwithcompose.utils.TrailingIconState
+import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
 
 @Composable
 fun ListAppBar(
     title: String,
+    sharedViewModel: ToDoSharedViewModel,
+    searchAppBarState: SearchAppBarState,
+    searchTextState: String
 ) {
-    var searchAppBarState by remember {
-        mutableStateOf(SearchAppBarState.CLOSED)
-    }
-    var searchTextState by remember {
-        mutableStateOf("")
-    }
 
     when (searchAppBarState) {
         SearchAppBarState.CLOSED -> DefaultListAppBar(
             title,
             onSearchClicked = {
-                searchAppBarState = SearchAppBarState.OPENED
+                sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
             },
             onSortClicked = {},
-            onDeleteCliced = {}
+            onDeleteAllClicked = {
+                sharedViewModel.action.value = Action.DELETE_ALL
+            }
         )
         else -> SearchAppBar(
             text = searchTextState,
-            onTextChanged = {newText -> searchTextState = newText},
+            onTextChanged = { newText -> sharedViewModel.searchTextState.value = newText
+                sharedViewModel.searchTasks(newText) },
             onCloseClicked = {
-                searchAppBarState = SearchAppBarState.CLOSED
-                searchTextState = ""
+                sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
+                sharedViewModel.searchTextState.value = ""
             },
-            onSearchClicked = {}
+            onSearchClicked = { searchQuery ->
+                sharedViewModel.searchTasks(searchQuery)
+            }
         )
     }
 }
@@ -80,7 +84,7 @@ fun DefaultListAppBar(
     title: String,
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteCliced: () -> Unit
+    onDeleteAllClicked: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -91,7 +95,7 @@ fun DefaultListAppBar(
             titleContentColor = Color.White,
         ),
         actions = {
-            AppBarActions(onSearchClicked = onSearchClicked, onSortClicked = onSortClicked, onDeleteClicked = onDeleteCliced)
+            AppBarActions(onSearchClicked = onSearchClicked, onSortClicked = onSortClicked, onDeleteAllClicked = onDeleteAllClicked)
         }
     )
 }
@@ -192,11 +196,11 @@ fun SearchAppBar(
 fun AppBarActions(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit
+    onDeleteAllClicked: () -> Unit
 ) {
     SearchAction(onSearchClicked = onSearchClicked)
     SortAction(onSortClicked = onSortClicked)
-    DeleteAllAction(onDeleteClicked = onDeleteClicked)
+    DeleteAllAction(onDeleteClicked = onDeleteAllClicked)
 }
 
 @Composable
@@ -279,7 +283,7 @@ fun DeleteAllAction(
 @Composable
 @Preview
 private fun AppBarPreview() {
-    DefaultListAppBar("Title", onSearchClicked = {}, onSortClicked = {}, onDeleteCliced = {})
+    DefaultListAppBar("Title", onSearchClicked = {}, onSortClicked = {}, onDeleteAllClicked = {})
 }
 
 @Composable

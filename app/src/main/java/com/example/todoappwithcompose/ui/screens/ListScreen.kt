@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todoappwithcompose.R
 import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
+import com.example.todoappwithcompose.utils.SearchAppBarState
 import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -27,17 +28,26 @@ fun ListScreen(
     LaunchedEffect(key1 = true) {
         sharedViewModel.fetchAllTasks()
     }
+
+    // Observing from viewModel
+    val action by sharedViewModel.action
     val allTasks by sharedViewModel.currentTasks.collectAsState()
+    val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
+    val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
+    val searchTextState: String by sharedViewModel.searchTextState
+
+    sharedViewModel.handleDatabaseActions(action = action)
+
     Scaffold(
         topBar = {
-            ListAppBar(stringResource(id = R.string.list_screen_title))
+            ListAppBar(stringResource(id = R.string.list_screen_title), sharedViewModel, searchAppBarState, searchTextState)
         },
         floatingActionButton = {
             ListFab(navigateToTaskScreen = navigateToTaskScreen)
         },
         containerColor = MaterialTheme.colorScheme.screenBackgroundColor
     ) { padding ->
-        ListContent(tasks = allTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = padding.calculateTopPadding())
+        ListContent(tasks = allTasks, searchedTasks = searchedTasks, navigateToTaskScreen = navigateToTaskScreen, searchAppBarState = searchAppBarState, topPadding = padding.calculateTopPadding())
     }
 
 
