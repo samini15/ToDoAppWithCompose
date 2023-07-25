@@ -1,9 +1,7 @@
 package com.example.todoappwithcompose.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -14,13 +12,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todoappwithcompose.R
-import com.example.todoappwithcompose.data.model.Priority
 import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
 import com.example.todoappwithcompose.utils.SearchAppBarState
 import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
     navigateToTaskScreen : (Int) -> Unit,
@@ -59,8 +54,13 @@ fun ListScreen(
             lowPriorityTasks = lowPriorityTasks,
             sortState = sortState,
             navigateToTaskScreen = navigateToTaskScreen,
+            onSwipeToDelete = { action, task ->
+                sharedViewModel.action.value = action
+                sharedViewModel.updateTaskFields(selectedTask = task)
+            },
             searchAppBarState = searchAppBarState,
-            topPadding = padding.calculateTopPadding())
+            topPadding = padding.calculateTopPadding()
+        )
     }
 
 

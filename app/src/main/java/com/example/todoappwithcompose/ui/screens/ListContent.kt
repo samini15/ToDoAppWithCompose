@@ -1,37 +1,56 @@
 package com.example.todoappwithcompose.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.todoappwithcompose.R
 import com.example.todoappwithcompose.data.model.Priority
 import com.example.todoappwithcompose.data.model.ToDoTask
 import com.example.todoappwithcompose.ui.theme.CARD_ELEVATION
+import com.example.todoappwithcompose.ui.theme.HighPriorityColor
+import com.example.todoappwithcompose.ui.theme.LARGEST_PADDING
 import com.example.todoappwithcompose.ui.theme.LARGE_PADDING
 import com.example.todoappwithcompose.ui.theme.LightMediumGray
 import com.example.todoappwithcompose.ui.theme.MEDIUM_PADDING
 import com.example.todoappwithcompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.todoappwithcompose.ui.theme.cardBackgroundColor
 import com.example.todoappwithcompose.ui.theme.textColorPrimary
+import com.example.todoappwithcompose.utils.Action
 import com.example.todoappwithcompose.utils.RequestState
 import com.example.todoappwithcompose.utils.SearchAppBarState
 
@@ -43,6 +62,7 @@ fun ListContent(
     lowPriorityTasks: List<ToDoTask>,
     sortState: RequestState<Priority>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    onSwipeToDelete: (Action, ToDoTask) -> Unit,
     searchAppBarState: SearchAppBarState,
     topPadding: Dp
 ) {
@@ -50,19 +70,39 @@ fun ListContent(
         when {
             searchAppBarState == SearchAppBarState.TRIGGERED -> {
                 if (searchedTasks is RequestState.Success) {
-                    HandleListContent(tasks = searchedTasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                    HandleListContent(
+                        tasks = searchedTasks.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        onSwipeToDelete = onSwipeToDelete,
+                        topPadding = topPadding
+                    )
                 }
             }
             sortState.data == Priority.NONE -> {
                 if (tasks is RequestState.Success) {
-                    HandleListContent(tasks = tasks.data, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                    HandleListContent(
+                        tasks = tasks.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        onSwipeToDelete = onSwipeToDelete,
+                        topPadding = topPadding
+                    )
                 }
             }
             sortState.data == Priority.LOW -> {
-                HandleListContent(tasks = lowPriorityTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                HandleListContent(
+                    tasks = lowPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    onSwipeToDelete = onSwipeToDelete,
+                    topPadding = topPadding
+                )
             }
             sortState.data == Priority.HIGH -> {
-                HandleListContent(tasks = highPriorityTasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+                HandleListContent(
+                    tasks = highPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    onSwipeToDelete = onSwipeToDelete,
+                    topPadding = topPadding
+                )
             }
         }
     }
@@ -72,18 +112,26 @@ fun ListContent(
 fun HandleListContent(
     tasks: List<ToDoTask>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    onSwipeToDelete: (Action, ToDoTask) -> Unit,
     topPadding: Dp
 ) {
     if (tasks.isEmpty()) {
         EmptyContent(topPadding = topPadding)
     } else {
-        DisplayTasks(tasks = tasks, navigateToTaskScreen = navigateToTaskScreen, topPadding = topPadding)
+        DisplayTasks(
+            tasks = tasks,
+            onSwipeToDelete = onSwipeToDelete,
+            navigateToTaskScreen = navigateToTaskScreen,
+            topPadding = topPadding
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayTasks(
     tasks: List<ToDoTask>,
+    onSwipeToDelete: (Action, ToDoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     topPadding: Dp
 ) {
@@ -102,7 +150,38 @@ fun DisplayTasks(
     ) {
         LazyColumn {
             itemsIndexed(tasks) { index, item ->
-                TaskItem(toDoTask = item, navigateToTaskScreen = navigateToTaskScreen, index != tasks.lastIndex)
+                /*val dismissState = rememberDismissState()
+                val degrees by animateFloatAsState(
+                    targetValue =
+                    if (dismissState.targetValue == DismissValue.Default) 0F
+                    else -45F
+                )
+                val dismissDirection = dismissState.dismissDirection
+                val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
+
+                if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
+                    onSwipeToDelete(Action.DELETE, item)
+                }*/
+
+                TaskItem(
+                    toDoTask = item,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    index != tasks.lastIndex
+                )
+
+                // TODO Not working
+                /*SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    background = { DismissBackground(degrees = degrees) },
+                    dismissContent = {
+                        TaskItem(
+                            toDoTask = item,
+                            navigateToTaskScreen = navigateToTaskScreen,
+                            index != tasks.lastIndex
+                        )
+                    }
+                )*/
             }
         }
     }
@@ -160,6 +239,24 @@ fun TaskItem(
                 .padding(all = MEDIUM_PADDING),
             thickness = 1.dp,
             color = LightMediumGray
+        )
+    }
+}
+
+@Composable
+fun DismissBackground(degrees: Float) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(HighPriorityColor)
+            .padding(horizontal = LARGEST_PADDING),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Icon(
+            modifier = Modifier.rotate(degrees),
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(id = R.string.delete_icon_content_description),
+            tint = Color.White
         )
     }
 }
