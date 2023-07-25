@@ -1,6 +1,7 @@
 package com.example.todoappwithcompose.viewModel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,7 @@ class ToDoSharedViewModel @Inject constructor(
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
 
     // Text fields values
-    val id: MutableState<Int> = mutableStateOf(0)
+    val id: MutableState<Int> = mutableIntStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
     val description: MutableState<String> = mutableStateOf("")
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)

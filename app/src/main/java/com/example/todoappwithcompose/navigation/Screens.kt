@@ -6,6 +6,14 @@ import com.example.todoappwithcompose.utils.Constants
 
 class Screens(navHostController: NavHostController) {
 
+    val splash: () -> Unit = {
+        navHostController.navigate(route = "list/${Action.NO_ACTION}") {
+            popUpTo(Constants.SPLASH_SCREEN) {
+                inclusive = true
+            }
+        }
+    }
+
     val list: (Action) -> Unit = { action ->
         navHostController.navigate(route = "list/${action.name}") {
             popUpTo(Constants.LIST_SCREEN) {

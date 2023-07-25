@@ -7,6 +7,7 @@ object Constants {
     const val TODO_TABLE = "todo_task_table"
 
     // Composable screens
+    const val SPLASH_SCREEN = "splash"
     const val LIST_SCREEN = "list/{action}"
     const val TASK_SCREEN = "task/{taskId}"
 
@@ -18,4 +19,6 @@ object Constants {
     // Data store
     const val PREFERENCE_NAME = "todo_preferences"
     const val PREFERENCE_KEY = "sort_state"
+
+    const val SPLASH_SCREEN_DELAY = 30000
 }
