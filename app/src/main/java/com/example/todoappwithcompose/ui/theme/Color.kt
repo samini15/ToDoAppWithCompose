@@ -23,7 +23,7 @@ val Darker = Color(0xFF151B20)
 val LowPriorityColor = Color(0xFF00C980)
 val MediumPriorityColor = Color(0xFFFFC114)
 val HighPriorityColor = Color(0XFFFF4646)
-val NonePriorityColor = Color(0xFFFFFFFF)
+val NonePriorityColor = MediumGray
 
 val ColorScheme.topAppBarContentColor: Color
     @Composable

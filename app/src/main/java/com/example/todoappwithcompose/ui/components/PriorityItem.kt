@@ -26,7 +26,7 @@ fun PriorityItm(priority: Priority) {
         Text(
             text = priority.name,
             modifier = Modifier.padding(start = LARGE_PADDING),
-            style = Typography.headlineMedium,
+            style = Typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface)
     }
 }
