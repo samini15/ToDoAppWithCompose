@@ -24,9 +24,9 @@ fun NavGraphBuilder.listComposable(
         val action = navBackStackEntry.arguments?.getString(Constants.LIST_ARGUMENT_KEY).toAction()
 
         LaunchedEffect(key1 = action) {
-            sharedViewModel.action.value = action
+            sharedViewModel.updateAction(newAction = action)
         }
-        val databaseAction by sharedViewModel.action
+        val databaseAction = sharedViewModel.action
         ListScreen(databaseAction = databaseAction, navigateToTaskScreen = navigateToTaskScreen, sharedViewModel = sharedViewModel)
     }
 }

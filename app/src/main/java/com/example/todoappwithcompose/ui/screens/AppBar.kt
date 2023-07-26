@@ -64,7 +64,7 @@ fun ListAppBar(
                 sharedViewModel.persistSortingState(priority)
             },
             onDeleteAllConfirmed = {
-                sharedViewModel.action.value = Action.DELETE_ALL
+                sharedViewModel.updateAction(newAction = Action.DELETE_ALL)
             }
         )
         else -> SearchAppBar(

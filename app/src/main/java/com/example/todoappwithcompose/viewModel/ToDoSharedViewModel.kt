@@ -1,8 +1,10 @@
 package com.example.todoappwithcompose.viewModel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoappwithcompose.data.repository.ToDoRepository
@@ -30,13 +32,18 @@ class ToDoSharedViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ): ViewModel() {
 
-    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+    var action by mutableStateOf(Action.NO_ACTION)
+        private set
 
     // Text fields values
-    val id: MutableState<Int> = mutableIntStateOf(0)
-    val title: MutableState<String> = mutableStateOf("")
-    val description: MutableState<String> = mutableStateOf("")
-    val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
+    var id by mutableIntStateOf(0)
+        private set
+    var title by mutableStateOf("")
+        private set
+    var description by/*: MutableState<String> = */mutableStateOf("")
+        private set
+    var priority by mutableStateOf(Priority.LOW)
+        private set
 
     val lowPriorityTasks: StateFlow<List<ToDoTask>> =
         toDoRepository.sortByLowPriority().stateIn(
@@ -125,15 +132,15 @@ class ToDoSharedViewModel @Inject constructor(
             Action.UNDO -> {}
             else -> {}
         }
-        this.action.value = Action.NO_ACTION
+        this.action = Action.NO_ACTION
     }
 
     private fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
             val toDoTask = ToDoTask(
-                title = title.value,
-                description = description.value,
-                priority = priority.value
+                title = title,
+                description = description,
+                priority = priority
             )
             toDoRepository.addTask(toDoTask = toDoTask)
         }
@@ -143,10 +150,10 @@ class ToDoSharedViewModel @Inject constructor(
     private fun updateTask() =
         viewModelScope.launch(Dispatchers.IO) {
             val toDoTask = ToDoTask(
-                id = id.value,
-                title = title.value,
-                description = description.value,
-                priority = priority.value
+                id = id,
+                title = title,
+                description = description,
+                priority = priority
             )
             toDoRepository.updateTask(toDoTask = toDoTask)
         }
@@ -154,10 +161,10 @@ class ToDoSharedViewModel @Inject constructor(
     private fun deleteTask() =
         viewModelScope.launch(Dispatchers.IO) {
             val toDoTask = ToDoTask(
-                id = id.value,
-                title = title.value,
-                description = description.value,
-                priority = priority.value
+                id = id,
+                title = title,
+                description = description,
+                priority = priority
             )
             toDoRepository.deleteTask(toDoTask = toDoTask)
         }
@@ -170,24 +177,40 @@ class ToDoSharedViewModel @Inject constructor(
 
     fun updateTaskFields(selectedTask: ToDoTask?) {
         if (selectedTask != null) {
-            id.value = selectedTask.id
-            title.value = selectedTask.title
-            description.value = selectedTask.description
-            priority.value = selectedTask.priority
+            id = selectedTask.id
+            title = selectedTask.title
+            description = selectedTask.description
+            priority = selectedTask.priority
         } else {
-            id.value = 0
-            title.value = ""
-            description.value = ""
-            priority.value = Priority.LOW
+            id = 0
+            title = ""
+            description = ""
+            priority = Priority.LOW
         }
     }
 
-    fun updateTitleField(newValue: String) {
+    fun updateTitle(newValue: String) {
         if (newValue.length < Constants.MAX_TITLE_FIELD_LENGTH) {
-            title.value = newValue
+            title = newValue
         }
     }
 
     fun validateFields() : Boolean =
-        title.value.isNotEmpty() && description.value.isNotEmpty()
+        title.isNotEmpty() && description.isNotEmpty()
+
+    // region Setters
+    fun updateAction(newAction: Action) {
+        action = newAction
+    }
+
+    fun updateDescription(description: String) {
+        this.description = description
+    }
+
+    fun updatePriority(priority: Priority) {
+        this.priority = priority
+    }
+
+    // endregion Setters
+
 }
