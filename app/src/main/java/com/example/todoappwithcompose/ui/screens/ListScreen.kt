@@ -13,11 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todoappwithcompose.R
 import com.example.todoappwithcompose.ui.theme.screenBackgroundColor
+import com.example.todoappwithcompose.utils.Action
 import com.example.todoappwithcompose.utils.SearchAppBarState
 import com.example.todoappwithcompose.viewModel.ToDoSharedViewModel
 
 @Composable
 fun ListScreen(
+    databaseAction: Action,
     navigateToTaskScreen : (Int) -> Unit,
     sharedViewModel: ToDoSharedViewModel
 ) {
@@ -27,7 +29,6 @@ fun ListScreen(
     }
 
     // Observing from viewModel
-    val action by sharedViewModel.action
     val allTasks by sharedViewModel.currentTasks.collectAsState()
     val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
     val sortState by sharedViewModel.sortState.collectAsState()
@@ -36,7 +37,11 @@ fun ListScreen(
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
 
-    sharedViewModel.handleDatabaseActions(action = action)
+    LaunchedEffect(key1 = databaseAction) {
+        if (databaseAction != Action.NO_ACTION) {
+            sharedViewModel.handleDatabaseActions(action = databaseAction)
+        }
+    }
 
     Scaffold(
         topBar = {
